@@ -1,0 +1,7 @@
+### bob:bobpassword
+GET localhost:8080
+Authorization: Basic Ym9iOmJvYnNwYXNzd29yZA==
+
+### cn bob:bobpassword
+GET localhost:8080/cn
+Authorization: Basic Ym9iOmJvYnNwYXNzd29yZA==
