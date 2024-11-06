@@ -2,6 +2,7 @@ package com.example.application.view.channel;
 
 import com.example.application.chat.ChatService;
 import com.example.application.chat.Message;
+import com.example.application.util.LimitedSortedAppendOnlyList;
 import com.example.application.view.MainLayout;
 import com.example.application.view.lobby.LobbyView;
 import com.vaadin.flow.component.AttachEvent;
@@ -16,25 +17,31 @@ import com.vaadin.flow.router.Route;
 import reactor.core.Disposable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Route(value = "/channel", layout = MainLayout.class)  // 이 뷰를 /channel 경로로 접근할 수 있게 함
 public class ChannelView
         extends VerticalLayout  // Vaadin 빌트인 레이아웃. 위에서부터 수직으로 컴포넌트 나열.
         implements HasUrlParameter<String>, // URL 파라미터
-        HasDynamicTitle
-{
+        HasDynamicTitle {
+
+    private static final int HISTORY_SIZE = 20;
 
     private final ChatService chatService;
     private final MessageList messageList;
 
-    private final List<Message> receivedMessages = new ArrayList<>();
+    private final LimitedSortedAppendOnlyList<Message> receivedMessages;
 
     private String channelId;
     private String channelName;
 
     public ChannelView(ChatService chatService) {
         this.chatService = chatService;
+        receivedMessages = new LimitedSortedAppendOnlyList<>(
+                HISTORY_SIZE,
+                Comparator.comparing(Message::sequenceNumber)
+        );
         setSizeFull();  // 뷰를 스크린 사이즈에 맞춤 -> width, height 100%
 
         this.messageList = new MessageList();   // 빌트인 컴포넌드. 메시지를 보여줌.
@@ -84,9 +91,18 @@ public class ChannelView
     }
 
     private Disposable subscribe() {
-        return chatService
+        Disposable subscription = chatService
                 .liveMessages(channelId)
                 .subscribe(this::receiveMessages);
+        String lastSeenMessageId = receivedMessages.getLast()
+                .map(Message::messageId)
+                .orElse(null);
+        receiveMessages(chatService.messageHistory(
+                channelId,
+                HISTORY_SIZE,
+                lastSeenMessageId
+        ));
+        return subscription;
     }
 
     @Override
