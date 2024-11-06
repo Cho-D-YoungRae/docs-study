@@ -2,6 +2,7 @@ package com.example.application.view.channel;
 
 import com.example.application.chat.ChatService;
 import com.example.application.chat.Message;
+import com.example.application.view.MainLayout;
 import com.example.application.view.lobby.LobbyView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.messages.MessageInput;
@@ -9,6 +10,7 @@ import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import reactor.core.Disposable;
@@ -16,10 +18,11 @@ import reactor.core.Disposable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route("/channel")  // 이 뷰를 /channel 경로로 접근할 수 있게 함
+@Route(value = "/channel", layout = MainLayout.class)  // 이 뷰를 /channel 경로로 접근할 수 있게 함
 public class ChannelView
         extends VerticalLayout  // Vaadin 빌트인 레이아웃. 위에서부터 수직으로 컴포넌트 나열.
-        implements HasUrlParameter<String> // URL 파라미터
+        implements HasUrlParameter<String>, // URL 파라미터
+        HasDynamicTitle
 {
 
     private final ChatService chatService;
@@ -28,6 +31,7 @@ public class ChannelView
     private final List<Message> receivedMessages = new ArrayList<>();
 
     private String channelId;
+    private String channelName;
 
     public ChannelView(ChatService chatService) {
         this.chatService = chatService;
@@ -47,11 +51,11 @@ public class ChannelView
     // HasUrlParameter 인터페이스의 메서드. URL 파라미터가 변경되면 호출
     @Override
     public void setParameter(BeforeEvent event, String channelId) {
-        if (chatService.channel(channelId).isEmpty()) {
-            event.forwardTo(LobbyView.class);
-        } else {
-            this.channelId = channelId;
-        }
+        chatService.channel(channelId).ifPresentOrElse(
+                channel -> this.channelName = channel.name(),
+                () -> event.forwardTo(LobbyView.class)
+        );
+        this.channelId = channelId;
     }
 
     private void sendMessage(String message) {
@@ -89,5 +93,10 @@ public class ChannelView
     protected void onAttach(AttachEvent attachEvent) {
         Disposable subscription = subscribe();
         addDetachListener(event -> subscription.dispose());
+    }
+
+    @Override
+    public String getPageTitle() {
+        return channelName;
     }
 }

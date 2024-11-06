@@ -2,6 +2,7 @@ package com.example.application.view.lobby;
 
 import com.example.application.chat.Channel;
 import com.example.application.chat.ChatService;
+import com.example.application.view.MainLayout;
 import com.example.application.view.channel.ChannelView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
@@ -16,7 +17,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
 
-@Route("/")
+@Route(value = "/", layout = MainLayout.class)
 @PageTitle("Lobby")
 public class LobbyView extends VerticalLayout {
 
