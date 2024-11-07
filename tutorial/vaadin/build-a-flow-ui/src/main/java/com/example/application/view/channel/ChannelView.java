@@ -14,6 +14,7 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import reactor.core.Disposable;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Route(value = "/channel", layout = MainLayout.class)  // 이 뷰를 /channel 경로로 접근할 수 있게 함
+@PermitAll
 public class ChannelView
         extends VerticalLayout  // Vaadin 빌트인 레이아웃. 위에서부터 수직으로 컴포넌트 나열.
         implements HasUrlParameter<String>, // URL 파라미터
