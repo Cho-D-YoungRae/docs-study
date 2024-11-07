@@ -3,6 +3,7 @@ package com.example.application.view;
 import com.example.application.view.lobby.LobbyView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
@@ -12,13 +13,16 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
+    private final AuthenticationContext authenticationContext;
 
-    public MainLayout() {
+    public MainLayout(AuthenticationContext authenticationContext) {
+        this.authenticationContext = authenticationContext;
         setPrimarySection(Section.DRAWER);
         addNavbarContent();
         addDrawerContent();
@@ -34,7 +38,11 @@ public class MainLayout extends AppLayout {
                 LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE, LumoUtility.Flex.GROW
         );
 
-        Header header = new Header(toggle, viewTitle);
+        Button logout = new Button("Logout " + authenticationContext.getPrincipalName().orElse(""),
+                event -> authenticationContext.logout()
+        );
+
+        Header header = new Header(toggle, viewTitle, logout);
         header.addClassNames(
                 LumoUtility.AlignItems.CENTER, LumoUtility.Display.FLEX,
                 LumoUtility.Padding.End.MEDIUM, LumoUtility.Width.FULL

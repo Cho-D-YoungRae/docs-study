@@ -2,6 +2,7 @@ package com.example.application.view.lobby;
 
 import com.example.application.chat.Channel;
 import com.example.application.chat.ChatService;
+import com.example.application.security.Roles;
 import com.example.application.view.MainLayout;
 import com.example.application.view.channel.ChannelView;
 import com.vaadin.flow.component.AttachEvent;
@@ -15,10 +16,13 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.spring.security.AuthenticationContext;
+import jakarta.annotation.security.PermitAll;
 
 
 @Route(value = "/", layout = MainLayout.class)
 @PageTitle("Lobby")
+@PermitAll
 public class LobbyView extends VerticalLayout {
 
     private final ChatService chatService;
@@ -27,7 +31,7 @@ public class LobbyView extends VerticalLayout {
     private final TextField channelNameField;
     private final Button addChannelButton;
 
-    public LobbyView(ChatService chatService) {
+    public LobbyView(ChatService chatService, AuthenticationContext authenticationContext) {
         this.chatService = chatService;
         setSizeFull();
 
@@ -44,10 +48,12 @@ public class LobbyView extends VerticalLayout {
         addChannelButton = new Button("Add channel", event -> addChannel());
         addChannelButton.setDisableOnClick(true);   // 클릭하면 비활성화되도록 함 -> 여러번 클릭 방지
 
-        HorizontalLayout toolbar = new HorizontalLayout(channelNameField, addChannelButton);
-        toolbar.setWidthFull();
-        toolbar.expand(channelNameField);
-        add(toolbar);
+        if (authenticationContext.hasRole(Roles.ADMIN)) {
+            HorizontalLayout toolbar = new HorizontalLayout(channelNameField, addChannelButton);
+            toolbar.setWidthFull();
+            toolbar.expand(channelNameField);
+            add(toolbar);
+        }
     }
 
     private void refreshChannels() {
