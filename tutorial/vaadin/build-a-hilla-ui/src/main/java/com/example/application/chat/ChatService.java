@@ -4,6 +4,8 @@ import com.example.application.chat.spi.ChannelRepository;
 import com.example.application.chat.spi.MessageRepository;
 import com.example.application.chat.spi.NewChannel;
 import com.example.application.chat.spi.NewMessage;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.hilla.BrowserCallable;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+@BrowserCallable
+@AnonymousAllowed
 @Service
 public class ChatService {
 
