@@ -7,6 +7,7 @@ import {ChatService} from "Frontend/generated/endpoints";
 import {useEffect} from "react";
 import Message from "Frontend/generated/com/example/application/chat/Message";
 import {pageTitle} from "Frontend/views/@layout";
+import {connectionActive} from "Frontend/util/ConnectionUtil";
 
 const HISTORY_SIZE = 20;
 
@@ -66,16 +67,19 @@ export default function ChannelView() {
             subscription.value = ChatService.liveMessages(channel.value!.id)
                 .onNext(receiveMessages)
                 .onError(() => console.error('Error in subscription'));
-            ChatService.messageHistory(channel.value!.id, HISTORY_SIZE, undefined)
+            const lastSeenMessage = messages.value[-1];
+            ChatService.messageHistory(channel.value!.id, HISTORY_SIZE, lastSeenMessage?.messageId)
               .then(receiveMessages)
               .catch(console.error);
         }
     }
 
     useEffect(() => {
-        updateChannel().then(subscribe).catch(console.error);
+        if (connectionActive.value) {
+            updateChannel().then(subscribe).catch(console.error);
+        }
         return unsubscribe;
-    }, []);
+    }, [channelId, connectionActive.value]);
 
     return <VerticalLayout theme="padding spacing" className="h-full">
         <MessageList className="h-full w-full border" items={messages.value.map(message => ({
