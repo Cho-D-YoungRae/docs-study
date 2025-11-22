@@ -5,7 +5,10 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/hello/User
+GET http://127.0.0.1:8000/items/42?q=somequery
 Accept: application/json
 
-###
+### Tutorial - Chapter 01
+
+GET http://127.0.0.1:8000/ch01
+Accept: application/json
