@@ -12,3 +12,16 @@ Accept: application/json
 
 GET http://127.0.0.1:8000/ch01
 Accept: application/json
+
+### Tutorial - Chapter 02
+
+GET http://127.0.0.1:8000/ch02/items/42
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/ch02/models/lenet
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/ch02/files//home/johndoe/myfile.txt
+Accept: application/json

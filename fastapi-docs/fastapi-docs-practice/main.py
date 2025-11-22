@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 
 import tutorial.ch01
+import tutorial.ch02
 
 app = FastAPI()
 
 app.include_router(tutorial.ch01.router)
+app.include_router(tutorial.ch02.router)
 
 @app.get("/")
 def read_root():
