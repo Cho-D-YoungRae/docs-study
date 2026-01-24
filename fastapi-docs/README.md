@@ -1,3 +1,3 @@
 # [FaseAPI Docs](https://fastapi.tiangolo.com/learn/)
 
-- [ ] 2025-11-21 ~ ing
+- [x] 2025-11-21 ~ 2025-12-20
