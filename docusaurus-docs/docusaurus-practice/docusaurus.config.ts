@@ -47,6 +47,12 @@ const config: Config = {
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         blog: {
+          // routeBasePath: '/',
+          blogTitle: "Blog title test",
+          blogDescription: "Testing blog description",
+          postsPerPage: "ALL",
+          blogSidebarTitle: "Blog title test",
+          blogSidebarCount: "ALL",
           showReadingTime: true,
           feedOptions: {
             type: ['rss', 'atom'],
