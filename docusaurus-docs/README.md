@@ -2,4 +2,4 @@
 
 > [Docs](https://docusaurus.io/docs)
 
-- [ ] 2026-02-14 ~ ing
+- [x] 2026-02-14 ~ 2026-02-14
