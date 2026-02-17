@@ -2,9 +2,9 @@
 name = "bentoml-practice"
 version = "0.1.0"
 description = "Add your description here"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
     "bentoml>=1.4.35",
     "torch>=2.10.0",
-    "transformers>=5.1.0",
+    "transformers>=4.0.0,<5",
 ]
