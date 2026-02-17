@@ -52,3 +52,35 @@
 5. 버전 관리 및 롤백 용이
 
    서비스 단위로 버전이 관리되어 문제 발생 시 이전 버전으로 쉽게 되돌릴 수 있다.
+
+## [LLM inference: vLLM](https://docs.bentoml.com/en/latest/examples/vllm.html)
+
+- 이 페이지는 vLLM을 사용해 LLM(예: Llama 3.1)을 고성능으로 서빙하는 방법을 설명한다.
+- vLLM은 PagedAttention, 연속 배칭 등으로 높은 처리량과 효율적인 GPU 메모리 사용을 제공한다.
+- BentoML은 서비스 정의, 리소스 설정(GPU 타입/개수), 모델 패키징을 담당한다.
+- 결과적으로 OpenAI 호환 API 형태의 LLM 서버를 쉽게 구축할 수 있다.
+- BentoCloud를 이용하면 CLI 한 줄로 프로덕션 배포도 가능하다.
+
+## [Agent: Function calling](https://docs.bentoml.com/en/latest/examples/function-calling.html)
+
+- 이 페이지는 LLM이 외부 함수를 실제로 호출하는 AI 에이전트를 BentoML로 구현하는 방법을 설명한다.
+- LLM은 OpenAI 호환 chat.completions API를 통해 함수 정의(JSON 스키마)를 전달받고, 필요 시 함수 이름과 인자(arguments) 를 반환한다.
+- 서비스는 이를 받아 실제 Python 함수를 실행한 뒤, 결과를 다시 LLM에 전달해 최종 자연어 응답을 생성한다.
+- LLM 서비스와 비즈니스 로직 서비스(Exchange Assistant)를 분리해 확장성과 유지보수성을 높였다.
+- 로컬 GPU 환경 또는 BentoCloud에 배포해 운영할 수 있다.
+
+## [Agent: LangGraph](https://docs.bentoml.com/en/latest/examples/langgraph.html)
+
+- LangGraph는 에이전트의 상태/분기/도구 호출 같은 ‘오케스트레이션 로직’**을 담당하고, BentoML은 이를 HTTP/REST API로 노출해 운영 가능한 서비스로 만든다.
+- 아키텍처는 크게 (1) LangGraph 에이전트를 담은 BentoML 서비스와 (2) 텍스트 생성을 담당하는 LLM 두 축으로 구성된다.
+- 요청 흐름은 User → BentoML API → LangGraph(Agent 노드에서 LLM 호출) → 필요 시 Tool 노드(예: DuckDuckGo) → 다시 Agent → 응답 반환이다.
+- LLM은 외부 API(예: Claude/OpenAI) 를 붙일 수도 있고, 오픈소스 LLM을 BentoML로 같이 호스팅하는 구성도 가능하다(운영/확장 분리).
+- 결과적으로 LangGraph의 복잡한 에이전트 로직을 그대로 유지하면서 BentoML의 배포/스케일링/관측(운영) 레이어 위에 올려 프로덕션으로 가져가는 패턴을 보여준다.
+
+## [LLM safety: ShieldGemma](https://docs.bentoml.com/en/latest/examples/shieldgemma.html)
+
+- 이 페이지는 ShieldGemma를 활용해 LLM 안전성을 강화하는 방법을 설명한다.
+- 사용자 프롬프트를 바로 대형 모델(GPT-4o 등)에 전달하지 않고, 먼저 ShieldGemma(소형 안전 모델) 로 유해성 점수를 평가한다.
+- 프롬프트의 정책 위반 확률(score)이 설정한 임계값(threshold) 을 초과하면 요청을 차단하고, 초과하지 않으면 그때만 LLM이 응답을 생성한다.
+- 아키텍처는 Gemma(안전 검사 서비스) → ShieldAssistant(게이트 + LLM 호출) 구조의 2단계 게이팅(gating) 패턴이다.
+- 이를 통해 비용을 절감하면서도, 유해하거나 정책 위반 가능성이 있는 입력을 사전에 차단하는 안전한 LLM 서비스 구조를 구현한다.
