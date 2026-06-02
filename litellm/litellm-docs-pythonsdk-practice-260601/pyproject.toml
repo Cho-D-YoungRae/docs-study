@@ -1,5 +1,5 @@
 [project]
-name = "litellm-docs-practice-260601"
+name = "litellm-docs-pythonsdk-practice-260601"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
