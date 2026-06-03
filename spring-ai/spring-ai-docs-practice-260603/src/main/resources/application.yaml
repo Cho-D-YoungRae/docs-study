@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: spring-ai-docs-practice
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
