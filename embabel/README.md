@@ -1,6 +1,6 @@
 # [Embabel](https://github.com/embabel/embabel-agent)
 
-- [ ] 2026-06-05 ~ ing
+~~- [ ] 2026-06-05 ~ ing~~ - DROP
 
 ## Reference
 
